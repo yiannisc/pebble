@@ -7,12 +7,30 @@
     "longName": "Spoken Time",
     "projectType": "native",
     "resources": {
-        "media": []
+        "media": [
+            {
+                "file": "fonts/gotham_light_31.ttf",
+                "name": "GOTHAM_LIGHT_31",
+                "type": "font"
+            },
+            {
+                "characterRegex": "[a-z']",
+                "file": "fonts/gotham_bold_36.ttf",
+                "name": "GOTHAM_BOLD_36",
+                "type": "font"
+            },
+            {
+                "file": "images/menu-image.png",
+                "menuIcon": true,
+                "name": "APP_ICON",
+                "type": "png"
+            }
+        ]
     },
     "shortName": "Spoken Time",
     "uuid": "0e897176-3019-4781-a485-61f66fc8776a",
     "versionCode": 1,
-    "versionLabel": "1.0",
+    "versionLabel": "0.11",
     "watchapp": {
         "watchface": true
     }

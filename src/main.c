@@ -8,19 +8,18 @@ static void update_time() {
   struct tm *tick_time = localtime(&temp);
 
   // Create a long-lived buffer
-	static char buffer[50];
+	static char buffer[60];
 	char hour[10];
-	char nearly[10];
+	char nearly[15];
 	char prefix[20];
-	char suffix[10];
+	char suffix[15] = "\0";
 	char hh12[2];
 	char hh24[2];
 	char mm[2];
-	char finaltext[50];
 	int h12;
 	int h24;
 	int mins;
-	int modmin = 0;
+	int modmin;
 
 	strftime(hh12, sizeof("00"), "%I", tick_time);
 	strftime(hh24, sizeof("00"), "%H", tick_time);
@@ -36,113 +35,115 @@ static void update_time() {
 		h24++;
 		if (h12 == 13){
 			h12 = 1;
+		}
+		if (h24 == 25){
 			h24 = 1;
 		}
 	}
+	if (h24 == 24){
+		h24 = 0;
+	}
 
 	if ((modmin > 1) && (modmin < 4)){
-		strcpy(nearly, "nearly ");
+		strcpy(nearly, "nearly\n");
 	}
 	else{
-		strcpy(nearly, "");
+		strcpy(nearly, "\n");
 	}
 
 	if ((((mins > 56) && (mins < 61))) || (mins == 0) || (mins == 1)) {
-		strcpy(suffix, " o\' clock");
+		strcpy(suffix, "o\' clock\0");
 	}
 	if ((mins > 1) && (mins < 7)) {
-		strcpy(prefix, "five past ");
+		strcpy(prefix, "five\npast\n");
 	}
 	if ((mins > 6) && (mins < 12)){
-		strcpy(prefix, "ten past ");
+		strcpy(prefix, "ten\npast\n");
 	}
 	if ((mins > 11) && (mins < 17)){
-		strcpy(prefix, "quarter past ");
+		strcpy(prefix, "quarter\npast\n");
 	}
 	if ((mins > 16) && (mins < 22)){
-		strcpy(prefix, "twenty past ");
+		strcpy(prefix, "twenty\npast\n");
 	}
 	if ((mins > 21) && (mins < 27)){
-		strcpy(prefix, "twenty five past ");
+		strcpy(prefix, "twenty\nfive past\n");
+//		if ((modmin > 1) && (modmin < 4)){
+//			strcpy(nearly, "\n");
+//			strcpy(suffix, " -ish\0");
+//		}
 	}
 	if ((mins > 26) && (mins < 32)){
-		strcpy(prefix, "half past ");
+		strcpy(prefix, "half\npast\n");
 	}
 	if ((mins > 31) && (mins < 37)){
-		strcpy(prefix, "twenty five to ");
+		strcpy(prefix, "twenty\nfive to\n");
 	}
 	if ((mins > 36) && (mins < 42)){
-		strcpy(prefix, "twenty to ");
+		strcpy(prefix, "twenty\nto\n");
 	}
 	if ((mins > 41) && (mins < 47)){
-		strcpy(prefix, "quarter to ");
+		strcpy(prefix, "quarter\nto\n");
 	}
 	if ((mins > 46) && (mins < 52)){
-		strcpy(prefix, "ten to ");
+		strcpy(prefix, "ten\nto\n");
 	}
 	if ((mins > 51) && (mins < 57)){
-		strcpy(prefix, "five to ");
+		strcpy(prefix, "five\nto\n");
 	}
 	
 	if (h12 == 1) {
-		strcpy(hour, "one");
+		strcpy(hour, "one\n");
 	}
 	if (h12 == 2) {
-		strcpy(hour, "two");
+		strcpy(hour, "two\n");
 	}
 	if (h12 == 3) {
-		strcpy(hour, "three");
+		strcpy(hour, "three\n");
 	}
 	if (h12 == 4) {
-		strcpy(hour, "four");
+		strcpy(hour, "four\n");
 	}
 	if (h12 == 5) {
-		strcpy(hour, "five");
+		strcpy(hour, "five\n");
 	}
 	if (h12 == 6) {
-		strcpy(hour, "six");
+		strcpy(hour, "six\n");
 	}
 	if (h12 == 7) {
-		strcpy(hour, "seven");
+		strcpy(hour, "seven\n");
 	}
 	if (h12 == 8) {
-		strcpy(hour, "eight");
+		strcpy(hour, "eight\n");
 	}
 	if (h12 == 9) {
-		strcpy(hour, "nine");
+		strcpy(hour, "nine\n");
 	}
 	if (h12 == 10) {
-		strcpy(hour, "ten");
+		strcpy(hour, "ten\n");
 	}
 	if (h12 == 11) {
-		strcpy(hour, "eleven");
+		strcpy(hour, "eleven\n");
 	}
+	//if (h12 == 12) {
+	//	strcpy(hour, "twelve");
+	//}
+
+	
 	if (h24 == 12) {
-		strcpy(hour, "midday");
-		strcpy(suffix, "");
+		strcpy(hour, "midday\n");
+		strcpy(suffix, "\0");
 	}
 	if (h24 == 0) {
-		strcpy(hour, "midnight");
-		if ((modmin >= 2) && (modmin <= 3)){
-			strcpy(nearly, "");
-			strcpy(suffix, " -ish");
-		}
-		else{
-			strcpy(suffix, "");
-		}
-
+		strcpy(hour, "midnight\n");
+		strcpy(suffix, "\0");
 	}
 	
-	
-	
-	strcpy(finaltext, "");
-	strcat(finaltext, nearly);
-	//strcat(buffer, nearly);
-	strcat(finaltext, prefix);
-	strcat(finaltext, hour);
-	strcat(finaltext, suffix);
 	strcpy(buffer, "");
-	strcat(buffer, finaltext);
+	strcat(buffer, nearly);
+	strcat(buffer, prefix);
+	strcat(buffer, hour);
+	strcat(buffer, suffix);
 
 //  // Write the current hours and minutes into the buffer
 //  if(clock_is_24h_style() == true) {
@@ -155,7 +156,6 @@ static void update_time() {
 	
 	// Display this time on the TextLayer
 	
-	
   text_layer_set_text(s_time_layer, buffer);
 }
 
@@ -165,15 +165,18 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
 
 static void main_window_load(Window *window) {
   // Create time TextLayer
-  s_time_layer = text_layer_create(GRect(0, -9, 144, 177));
+  s_time_layer = text_layer_create(GRect(0, -6, 144, 177));
   text_layer_set_background_color(s_time_layer, GColorBlack);
   text_layer_set_text_color(s_time_layer, GColorClear);
-  text_layer_set_text(s_time_layer, "...");
+  text_layer_set_text(s_time_layer, "");
 
   // Improve the layout to be more like a watchface
-  text_layer_set_font(s_time_layer, fonts_get_system_font(FONT_KEY_BITHAM_42_LIGHT));
+  text_layer_set_font(s_time_layer, fonts_get_system_font(FONT_KEY_BITHAM_30_BLACK));
   //text_layer_set_text_alignment(s_time_layer, GTextAlignmentCenter);
-
+	//static GFont boldFont;
+	//boldFont = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_GOTHAM_BOLD_36));
+	//text_layer_set_font(s_time_layer, boldFont);
+	
   // Add it as a child layer to the Window's root layer
   layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_time_layer));
 }
