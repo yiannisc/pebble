@@ -54,6 +54,10 @@ static void update_time() {
 	if ((((mins > 56) && (mins < 61))) || (mins == 0) || (mins == 1)) {
 		strcpy(prefix, "\n");
 		strcpy(suffix, "o\' clock\0");
+		if ((modmin > 1) && (modmin < 4)){
+			strcpy(nearly, "\n");
+			strcpy(prefix, "\nnearly\n");
+		}
 	}
 	if ((mins > 1) && (mins < 7)) {
 		strcpy(prefix, "five\npast\n");

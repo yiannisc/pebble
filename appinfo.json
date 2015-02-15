@@ -30,7 +30,7 @@
     "shortName": "Spoken Time",
     "uuid": "0e897176-3019-4781-a485-61f66fc8776a",
     "versionCode": 1,
-    "versionLabel": "0.12",
+    "versionLabel": "0.13",
     "watchapp": {
         "watchface": true
     }
